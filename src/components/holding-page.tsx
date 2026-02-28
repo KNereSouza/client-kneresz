@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { AsciiCat } from "@/components/ascii-cat";
 import { AsciiFireworks } from "@/components/ascii-fireworks";
 import { AsciiLogo } from "@/components/ascii-logo";
@@ -20,20 +21,31 @@ export function HoldingPage() {
             <AsciiLogo />
           </div>
 
-          <p className="text-muted text-xs sm:text-sm tracking-widest uppercase">
-            coming soon
-          </p>
-
           <TypingText />
 
           <div className="w-32 sm:w-48 border-t border-border" />
+
+          <div className="flex gap-4 sm:gap-6 text-xs sm:text-sm">
+            <Link
+              href="/posts"
+              className="px-3 py-1.5 border border-border text-muted hover:text-fg hover:border-fg transition-colors"
+            >
+              [read my posts]
+            </Link>
+            <Link
+              href="/about"
+              className="px-3 py-1.5 border border-border text-muted hover:text-fg hover:border-fg transition-colors"
+            >
+              [about me]
+            </Link>
+          </div>
 
           <div className="flex gap-4 sm:gap-6 text-xs sm:text-sm">
             <a
               href="https://github.com/KNereSouza"
               target="_blank"
               rel="noopener noreferrer"
-              className="px-3 py-1.5 border border-border text-muted hover:text-fg hover:border-fg transition-colors"
+              className="text-muted hover:text-fg transition-colors"
             >
               github
             </a>
@@ -41,7 +53,7 @@ export function HoldingPage() {
               href="https://linkedin.com/in/kneresouza"
               target="_blank"
               rel="noopener noreferrer"
-              className="px-3 py-1.5 border border-border text-muted hover:text-fg hover:border-fg transition-colors"
+              className="text-muted hover:text-fg transition-colors"
             >
               linkedin
             </a>

@@ -1,5 +1,5 @@
 import { HoldingPage } from "@/components/holding-page";
 
-export default function Home() {
+export default function HomePage() {
   return <HoldingPage />;
 }
