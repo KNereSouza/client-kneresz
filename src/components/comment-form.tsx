@@ -51,13 +51,13 @@ export function CommentForm({ slug, onSubmitted }: CommentFormProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="border border-border p-4">
+    <form onSubmit={handleSubmit} className="border border-border p-3 sm:p-4">
       <textarea
         value={body}
         onChange={(e) => setBody(e.target.value)}
         placeholder="write a comment..."
         rows={3}
-        className="w-full bg-transparent text-sm resize-none outline-none placeholder:text-muted/50 mb-3"
+        className="w-full bg-transparent text-xs sm:text-sm resize-none outline-none placeholder:text-muted/50 mb-3"
       />
       {error && (
         <p className="text-xs text-muted mb-2">&gt; {error}</p>

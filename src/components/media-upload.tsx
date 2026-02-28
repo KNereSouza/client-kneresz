@@ -42,7 +42,7 @@ export function MediaUpload({ onUploaded }: MediaUploadProps) {
   }
 
   return (
-    <div className="border border-border p-4 mb-6">
+    <div className="border border-border p-3 sm:p-4 mb-6">
       <input
         ref={fileRef}
         type="file"
