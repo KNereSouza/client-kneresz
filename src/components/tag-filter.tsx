@@ -22,7 +22,7 @@ export function TagFilter({ tags }: TagFilterProps) {
       params.delete("tag");
     }
     const qs = params.toString();
-    router.push(qs ? `/?${qs}` : "/");
+    router.push(qs ? `/posts?${qs}` : "/posts");
   }
 
   return (

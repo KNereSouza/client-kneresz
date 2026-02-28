@@ -23,7 +23,7 @@ export function Pagination({ total, limit }: PaginationProps) {
       params.set("page", String(page));
     }
     const qs = params.toString();
-    router.push(qs ? `/?${qs}` : "/");
+    router.push(qs ? `/posts?${qs}` : "/posts");
   }
 
   return (
