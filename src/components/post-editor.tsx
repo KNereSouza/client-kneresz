@@ -15,6 +15,8 @@ export function PostEditor({ post }: PostEditorProps) {
   const router = useRouter();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const zenTextareaRef = useRef<HTMLTextAreaElement>(null);
+  const zenPreviewRef = useRef<HTMLDivElement>(null);
+  const isSyncingScroll = useRef(false);
   const [title, setTitle] = useState(post?.title || "");
   const [body, setBody] = useState(post?.body || "");
   const [tagsInput, setTagsInput] = useState(post?.tags.join(", ") || "");
@@ -90,6 +92,27 @@ export function PostEditor({ post }: PostEditorProps) {
     }
   }, [zen]);
 
+  function syncScroll(source: "editor" | "preview") {
+    if (isSyncingScroll.current) return;
+    isSyncingScroll.current = true;
+
+    const editor = zenTextareaRef.current;
+    const preview = zenPreviewRef.current;
+    if (!editor || !preview) {
+      isSyncingScroll.current = false;
+      return;
+    }
+
+    const src = source === "editor" ? editor : preview;
+    const dst = source === "editor" ? preview : editor;
+    const ratio = src.scrollTop / (src.scrollHeight - src.clientHeight || 1);
+    dst.scrollTop = ratio * (dst.scrollHeight - dst.clientHeight || 1);
+
+    requestAnimationFrame(() => {
+      isSyncingScroll.current = false;
+    });
+  }
+
   function handleTextareaKeyDown(e: React.KeyboardEvent<HTMLTextAreaElement>) {
     if (e.key !== "Enter") return;
 
@@ -153,14 +176,19 @@ export function PostEditor({ post }: PostEditorProps) {
                 value={body}
                 onChange={(e) => setBody(e.target.value)}
                 onKeyDown={handleTextareaKeyDown}
+                onScroll={() => syncScroll("editor")}
                 placeholder="Write..."
-                className="flex-1 w-full bg-transparent px-8 sm:px-16 py-8 sm:py-12 text-sm sm:text-base leading-relaxed outline-none resize-none font-mono placeholder:text-muted/30"
+                className="flex-1 w-full bg-transparent px-8 sm:px-16 py-8 sm:py-12 text-sm sm:text-base leading-relaxed outline-none resize-none font-mono placeholder:text-muted/30 overflow-y-scroll scrollbar-none"
               />
             </div>
             {zenPreview && (
               <>
                 <div className="w-px bg-border shrink-0" />
-                <div className="flex-1 overflow-y-auto px-8 sm:px-16 py-8 sm:py-12 min-w-0">
+                <div
+                  ref={zenPreviewRef}
+                  onScroll={() => syncScroll("preview")}
+                  className="flex-1 overflow-y-scroll scrollbar-none px-8 sm:px-16 py-8 sm:py-12 min-w-0"
+                >
                   <Markdown content={body} />
                 </div>
               </>
