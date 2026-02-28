@@ -28,7 +28,16 @@ export default function AboutPage() {
           </h2>
           <div className="text-muted text-xs sm:text-sm space-y-3 leading-relaxed">
             <p>
-              todo: write your history here.
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
+              eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
+              ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+              aliquip ex ea commodo consequat.
+            </p>
+            <p>
+              Duis aute irure dolor in reprehenderit in voluptate velit esse
+              cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
+              cupidatat non proident, sunt in culpa qui officia deserunt mollit
+              anim id est laborum.
             </p>
           </div>
         </section>
@@ -40,9 +49,22 @@ export default function AboutPage() {
           </h2>
           <div className="text-muted text-xs sm:text-sm space-y-4">
             <div className="border-l-2 border-border pl-4">
-              <p className="text-fg font-bold">Job Title @ Company</p>
+              <p className="text-fg font-bold">Fullstack Developer @ Acme Corp</p>
               <p className="text-muted text-xs">2024 - present</p>
-              <p className="mt-1">todo: describe your role and responsibilities.</p>
+              <p className="mt-1">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus
+                lacinia odio vitae vestibulum vestibulum. Cras vehicula, mi eget
+                laoreet varius, augue eros dapibus ipsum.
+              </p>
+            </div>
+            <div className="border-l-2 border-border pl-4">
+              <p className="text-fg font-bold">Backend Intern @ Startup Inc</p>
+              <p className="text-muted text-xs">2023 - 2024</p>
+              <p className="mt-1">
+                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
+                nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
+                reprehenderit in voluptate velit esse cillum dolore.
+              </p>
             </div>
           </div>
         </section>
@@ -55,19 +77,19 @@ export default function AboutPage() {
           <div className="text-muted text-xs sm:text-sm space-y-2">
             <p>
               <span className="text-fg">languages:</span>{" "}
-              todo
+              TypeScript, Python, Rust, Go, SQL
             </p>
             <p>
               <span className="text-fg">frameworks:</span>{" "}
-              todo
+              Next.js, React, FastAPI, Tailwind CSS
             </p>
             <p>
               <span className="text-fg">databases:</span>{" "}
-              todo
+              PostgreSQL, Redis, SQLite
             </p>
             <p>
               <span className="text-fg">tools:</span>{" "}
-              todo
+              Docker, Git, Linux, Neovim, Cloudflare
             </p>
           </div>
         </section>
@@ -81,8 +103,25 @@ export default function AboutPage() {
             <div className="border border-border p-4">
               <p className="text-fg font-bold">kneresz.com</p>
               <p className="mt-1">
-                personal blog and portfolio. built with next.js, fastapi,
-                postgresql, and cloudflare r2.
+                Personal blog and portfolio. Built with Next.js, FastAPI,
+                PostgreSQL, and Cloudflare R2. Monospace aesthetics with ASCII
+                art throughout.
+              </p>
+              <a
+                href="https://github.com/KNereSouza"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-fg hover:text-accent transition-colors mt-2 inline-block"
+              >
+                [source]
+              </a>
+            </div>
+            <div className="border border-border p-4">
+              <p className="text-fg font-bold">lorem-cli</p>
+              <p className="mt-1">
+                Sed ut perspiciatis unde omnis iste natus error sit voluptatem
+                accusantium doloremque laudantium, totam rem aperiam eaque ipsa
+                quae ab illo inventore veritatis.
               </p>
               <a
                 href="https://github.com/KNereSouza"
