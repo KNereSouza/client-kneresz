@@ -14,6 +14,7 @@ interface PostEditorProps {
 export function PostEditor({ post }: PostEditorProps) {
   const router = useRouter();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const zenTextareaRef = useRef<HTMLTextAreaElement>(null);
   const [title, setTitle] = useState(post?.title || "");
   const [body, setBody] = useState(post?.body || "");
   const [tagsInput, setTagsInput] = useState(post?.tags.join(", ") || "");
@@ -21,6 +22,8 @@ export function PostEditor({ post }: PostEditorProps) {
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState("");
   const [mediaModal, setMediaModal] = useState<"image" | "video" | null>(null);
+  const [zen, setZen] = useState(false);
+  const [zenPreview, setZenPreview] = useState(false);
   const pendingInsertRef = useRef<{ start: number; end: number; prefix: string } | null>(null);
 
   const parseTags = useCallback(
@@ -65,10 +68,27 @@ export function PostEditor({ post }: PostEditorProps) {
         e.preventDefault();
         handleSave();
       }
+      if (e.altKey && e.key === "z") {
+        e.preventDefault();
+        setZen((v) => {
+          if (v) setZenPreview(false);
+          return !v;
+        });
+      }
+      if (e.altKey && e.key === "p") {
+        e.preventDefault();
+        setZenPreview((v) => !v);
+      }
     }
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [handleSave]);
+
+  useEffect(() => {
+    if (zen) {
+      requestAnimationFrame(() => zenTextareaRef.current?.focus());
+    }
+  }, [zen]);
 
   function handleTextareaKeyDown(e: React.KeyboardEvent<HTMLTextAreaElement>) {
     if (e.key !== "Enter") return;
@@ -113,13 +133,62 @@ export function PostEditor({ post }: PostEditorProps) {
     setMediaModal(null);
 
     requestAnimationFrame(() => {
-      const ta = textareaRef.current;
+      const ta = zen ? zenTextareaRef.current : textareaRef.current;
       if (ta) {
         const cursorPos = pending.start + embed.length;
         ta.focus();
         ta.setSelectionRange(cursorPos, cursorPos);
       }
     });
+  }
+
+  if (zen) {
+    return (
+      <>
+        <div className="fixed inset-0 z-40 bg-bg flex flex-col">
+          <div className="flex-1 flex min-h-0">
+            <div className={`flex-1 flex flex-col min-w-0 ${zenPreview ? "w-1/2" : "w-full"}`}>
+              <textarea
+                ref={zenTextareaRef}
+                value={body}
+                onChange={(e) => setBody(e.target.value)}
+                onKeyDown={handleTextareaKeyDown}
+                placeholder="Write..."
+                className="flex-1 w-full bg-transparent px-8 sm:px-16 py-8 sm:py-12 text-sm sm:text-base leading-relaxed outline-none resize-none font-mono placeholder:text-muted/30"
+              />
+            </div>
+            {zenPreview && (
+              <>
+                <div className="w-px bg-border shrink-0" />
+                <div className="flex-1 overflow-y-auto px-8 sm:px-16 py-8 sm:py-12 min-w-0">
+                  <Markdown content={body} />
+                </div>
+              </>
+            )}
+          </div>
+          <div className="shrink-0 px-4 py-2 flex items-center justify-between text-xs text-muted/40">
+            <span>
+              {isSaving ? "saving..." : "zen"}
+              {zenPreview ? " + preview" : ""}
+            </span>
+            <span>
+              alt+z exit | alt+p preview | ctrl+s save
+            </span>
+          </div>
+        </div>
+
+        {mediaModal && (
+          <MediaModal
+            type={mediaModal}
+            onSelect={handleMediaSelect}
+            onClose={() => {
+              pendingInsertRef.current = null;
+              setMediaModal(null);
+            }}
+          />
+        )}
+      </>
+    );
   }
 
   return (
@@ -183,7 +252,7 @@ export function PostEditor({ post }: PostEditorProps) {
             {isSaving ? "[saving...]" : "[save]"}
           </button>
           <span className="text-xs text-muted">
-            ctrl+s to save | type !image or !video + enter to embed media
+            ctrl+s save | alt+z zen | !image / !video + enter to embed
           </span>
         </div>
       </div>
