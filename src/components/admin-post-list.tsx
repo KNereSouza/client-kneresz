@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { apiFetch } from "@/lib/client-api";
+import { ConfirmModal } from "@/components/confirm-modal";
 import type { PostOut } from "@/lib/types";
 
 interface AdminPostListProps {
@@ -12,6 +13,7 @@ interface AdminPostListProps {
 
 export function AdminPostList({ posts, onRefresh }: AdminPostListProps) {
   const [actionSlug, setActionSlug] = useState<string | null>(null);
+  const [purgeSlug, setPurgeSlug] = useState<string | null>(null);
 
   async function handleAction(
     slug: string,
@@ -47,11 +49,9 @@ export function AdminPostList({ posts, onRefresh }: AdminPostListProps) {
     }
   }
 
-  async function handlePurge(slug: string) {
-    const confirmed = prompt(`Type "${slug}" to permanently delete:`);
-    if (confirmed !== slug) return;
-
+  async function executePurge(slug: string) {
     setActionSlug(slug);
+    setPurgeSlug(null);
     try {
       await apiFetch(`/posts/${slug}/purge`, {
         method: "DELETE",
@@ -70,6 +70,7 @@ export function AdminPostList({ posts, onRefresh }: AdminPostListProps) {
   }
 
   return (
+    <>
     <div className="space-y-3">
       {posts.map((post) => {
         const isProcessing = actionSlug === post.slug;
@@ -142,7 +143,7 @@ export function AdminPostList({ posts, onRefresh }: AdminPostListProps) {
                     [restore]
                   </button>
                   <button
-                    onClick={() => handlePurge(post.slug)}
+                    onClick={() => setPurgeSlug(post.slug)}
                     disabled={isProcessing}
                     className="text-muted hover:text-fg transition-colors cursor-pointer disabled:opacity-30"
                   >
@@ -155,5 +156,13 @@ export function AdminPostList({ posts, onRefresh }: AdminPostListProps) {
         );
       })}
     </div>
+    {purgeSlug && (
+      <ConfirmModal
+        slug={purgeSlug}
+        onConfirm={() => executePurge(purgeSlug)}
+        onCancel={() => setPurgeSlug(null)}
+      />
+    )}
+    </>
   );
 }
