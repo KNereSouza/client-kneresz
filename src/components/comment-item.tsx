@@ -31,7 +31,7 @@ export function CommentItem({ comment, onDeleted }: CommentItemProps) {
   }
 
   return (
-    <div className="flex gap-3">
+    <div className="flex gap-2 sm:gap-3">
       <AsciiAvatar id={comment.avatar_id} />
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 mb-1 text-xs">
@@ -47,7 +47,7 @@ export function CommentItem({ comment, onDeleted }: CommentItemProps) {
             </button>
           )}
         </div>
-        <p className="text-sm whitespace-pre-wrap break-words">
+        <p className="text-xs sm:text-sm whitespace-pre-wrap break-words">
           {comment.body}
         </p>
       </div>

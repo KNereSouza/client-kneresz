@@ -27,7 +27,7 @@ export default function AdminLayout({
   }
 
   return (
-    <div className="min-h-dvh px-4 sm:px-6 py-8">
+    <div className="min-h-dvh px-6 sm:px-8 py-8">
       <div className="max-w-4xl mx-auto">
         <h1 className="text-sm font-bold mb-4">admin</h1>
         <AdminNav />

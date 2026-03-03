@@ -42,7 +42,7 @@ export function ConfirmModal({ slug, onConfirm, onCancel }: ConfirmModalProps) {
       onClick={handleBackdropClick}
       className="fixed inset-0 z-50 flex items-center justify-center bg-bg/80 p-4"
     >
-      <div className="border border-border bg-bg w-full max-w-sm">
+      <div className="border border-border bg-bg w-full max-w-[calc(100vw-2rem)] sm:max-w-sm">
         <div className="border-b border-border px-4 py-3">
           <span className="text-sm font-bold">permanent delete</span>
         </div>

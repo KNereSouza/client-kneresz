@@ -35,7 +35,7 @@ export function CommentSection({ slug }: { slug: string }) {
 
   return (
     <section>
-      <h2 className="text-sm font-bold mb-6">
+      <h2 className="text-xs sm:text-sm font-bold mb-4 sm:mb-6">
         comments ({comments.length})
       </h2>
       {isLoading ? (

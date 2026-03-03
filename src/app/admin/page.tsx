@@ -43,7 +43,7 @@ export default function AdminPostsPage() {
 
   return (
     <div>
-      <div className="flex items-center gap-2 mb-6 text-xs">
+      <div className="flex flex-wrap items-center gap-1 sm:gap-2 mb-6 text-xs">
         {filters.map((f) => (
           <button
             key={f}

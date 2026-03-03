@@ -16,29 +16,41 @@ const ASCII_HEADER = `
 `;
 
 interface Props {
-  searchParams: Promise<{ page?: string; tag?: string }>;
+  searchParams: Promise<{ page?: string; tag?: string | string[] }>;
 }
 
 export default async function PostListPage({ searchParams }: Props) {
   const { page, tag } = await searchParams;
   const currentPage = Number(page || "1");
   const offset = (currentPage - 1) * LIMIT;
+  const activeTags = tag ? (Array.isArray(tag) ? tag : [tag]) : [];
 
   const params = new URLSearchParams();
   params.set("status", "published");
   params.set("offset", String(offset));
   params.set("limit", String(LIMIT));
-  if (tag) params.set("tag", tag);
+  for (const t of activeTags) params.append("tag", t);
 
-  const res = await backendFetch(`/posts?${params.toString()}`);
+  const allParams = new URLSearchParams();
+  allParams.set("status", "published");
+  allParams.set("limit", "100");
+
+  const [res, allRes] = await Promise.all([
+    backendFetch(`/posts?${params.toString()}`),
+    activeTags.length > 0
+      ? backendFetch(`/posts?${allParams.toString()}`)
+      : null,
+  ]);
 
   if (!res.ok) {
     return <p className="text-muted text-sm">failed to load posts</p>;
   }
 
   const data: PostListType = await res.json();
+  const allData: PostListType | null = allRes?.ok ? await allRes.json() : null;
 
-  const allTags = [...new Set(data.items.flatMap((p) => p.tags))].sort();
+  const tagSource = allData ? allData.items : data.items;
+  const allTags = [...new Set(tagSource.flatMap((p) => p.tags))].sort();
 
   return (
     <>

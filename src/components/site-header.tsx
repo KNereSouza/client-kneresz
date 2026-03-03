@@ -2,14 +2,13 @@
 
 import Link from "next/link";
 import { useAuth } from "@/components/auth-provider";
-import { ThemeToggle } from "@/components/theme-toggle";
 
 export function SiteHeader() {
   const { user, isAdmin, isLoading } = useAuth();
 
   return (
-    <header className="border-b border-border px-4 sm:px-6 py-4">
-      <div className="max-w-3xl mx-auto flex items-center justify-between gap-4">
+    <header className="border-b border-border px-6 sm:px-8 py-4">
+      <div className="max-w-3xl mx-auto flex flex-wrap items-center justify-between gap-2 sm:gap-4">
         <div className="flex items-center gap-4 sm:gap-6 text-xs sm:text-sm">
           <Link
             href="/"
@@ -38,8 +37,7 @@ export function SiteHeader() {
             </Link>
           )}
         </div>
-        <div className="flex items-center gap-3 sm:gap-4 text-xs sm:text-sm">
-          <ThemeToggle />
+        <div className="flex items-center gap-2 sm:gap-3 text-xs sm:text-sm">
           {!isLoading && (
             <>
               {user ? (

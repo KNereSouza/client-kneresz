@@ -70,7 +70,7 @@ export function PostEditor({ post }: PostEditorProps) {
         e.preventDefault();
         handleSave();
       }
-      if (e.altKey && e.key === "z") {
+      if ((e.altKey && e.key === "z") || (zen && e.key === "Escape")) {
         e.preventDefault();
         setZen((v) => {
           if (v) setZenPreview(false);
@@ -84,13 +84,16 @@ export function PostEditor({ post }: PostEditorProps) {
     }
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [handleSave]);
+  }, [handleSave, zen]);
 
   useEffect(() => {
     if (zen) {
       requestAnimationFrame(() => zenTextareaRef.current?.focus());
     }
   }, [zen]);
+
+  const wordCount = body.trim() ? body.trim().split(/\s+/).length : 0;
+  const charCount = body.length;
 
   function syncScroll(source: "editor" | "preview") {
     if (isSyncingScroll.current) return;
@@ -168,39 +171,47 @@ export function PostEditor({ post }: PostEditorProps) {
   if (zen) {
     return (
       <>
-        <div className="fixed inset-0 z-40 bg-bg flex flex-col">
+        <div className="fixed inset-0 z-40 bg-bg flex flex-col animate-zen-in">
           <div className="flex-1 flex min-h-0">
             <div className={`flex-1 flex flex-col min-w-0 ${zenPreview ? "w-1/2" : "w-full"}`}>
-              <textarea
-                ref={zenTextareaRef}
-                value={body}
-                onChange={(e) => setBody(e.target.value)}
-                onKeyDown={handleTextareaKeyDown}
-                onScroll={() => syncScroll("editor")}
-                placeholder="Write..."
-                className="flex-1 w-full bg-transparent px-8 sm:px-16 py-8 sm:py-12 text-sm sm:text-base leading-relaxed outline-none resize-none font-mono placeholder:text-muted/30 overflow-y-scroll scrollbar-none"
-              />
+              <div className="flex-1 flex justify-center overflow-hidden">
+                <textarea
+                  ref={zenTextareaRef}
+                  value={body}
+                  onChange={(e) => setBody(e.target.value)}
+                  onKeyDown={handleTextareaKeyDown}
+                  onScroll={() => syncScroll("editor")}
+                  placeholder="..."
+                  className={`flex-1 bg-transparent py-12 sm:py-20 text-sm sm:text-base leading-[1.9] outline-none resize-none font-mono placeholder:text-muted/20 overflow-y-scroll scrollbar-none ${
+                    zenPreview
+                      ? "px-8 sm:px-12"
+                      : "px-8 sm:px-12 max-w-3xl"
+                  }`}
+                />
+              </div>
             </div>
             {zenPreview && (
               <>
-                <div className="w-px bg-border shrink-0" />
-                <div
-                  ref={zenPreviewRef}
-                  onScroll={() => syncScroll("preview")}
-                  className="flex-1 overflow-y-scroll scrollbar-none px-8 sm:px-16 py-8 sm:py-12 min-w-0"
-                >
-                  <Markdown content={body} />
+                <div className="w-px bg-border/50 shrink-0" />
+                <div className="flex-1 flex justify-center overflow-hidden min-w-0">
+                  <div
+                    ref={zenPreviewRef}
+                    onScroll={() => syncScroll("preview")}
+                    className="flex-1 max-w-3xl overflow-y-scroll scrollbar-none px-8 sm:px-12 py-12 sm:py-20"
+                  >
+                    <Markdown content={body} />
+                  </div>
                 </div>
               </>
             )}
           </div>
-          <div className="shrink-0 px-4 py-2 flex items-center justify-between text-xs text-muted/40">
-            <span>
-              {isSaving ? "saving..." : "zen"}
-              {zenPreview ? " + preview" : ""}
+          <div className="shrink-0 border-t border-border/30 px-6 py-2.5 flex items-center justify-between text-xs text-muted/30">
+            <span className="flex items-center gap-4">
+              <span>{isSaving ? "saving..." : "zen"}{zenPreview ? " + preview" : ""}</span>
+              <span>{wordCount}w / {charCount}c</span>
             </span>
             <span>
-              alt+z exit | alt+p preview | ctrl+s save
+              esc exit | alt+p preview | ctrl+s save
             </span>
           </div>
         </div>
@@ -280,7 +291,7 @@ export function PostEditor({ post }: PostEditorProps) {
             {isSaving ? "[saving...]" : "[save]"}
           </button>
           <span className="text-xs text-muted">
-            ctrl+s save | alt+z zen | !image / !video + enter to embed
+            ctrl+s save | alt+z zen | !image / !video + enter
           </span>
         </div>
       </div>

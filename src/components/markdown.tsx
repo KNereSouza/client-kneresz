@@ -26,7 +26,7 @@ export function Markdown({ content }: { content: string }) {
             const isInline = !className;
             if (isInline) {
               return (
-                <code className="bg-border/50 px-1.5 py-0.5 text-sm" {...props}>
+                <code className="px-1.5 py-0.5 text-sm" {...props}>
                   {children}
                 </code>
               );
@@ -38,7 +38,7 @@ export function Markdown({ content }: { content: string }) {
             );
           },
           pre: ({ children }) => (
-            <pre className="bg-border/30 border border-border p-4 overflow-x-auto text-sm">
+            <pre className="border border-border p-4 overflow-x-auto text-xs sm:text-sm">
               {children}
             </pre>
           ),

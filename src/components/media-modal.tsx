@@ -105,7 +105,7 @@ export function MediaModal({ type, onSelect, onClose }: MediaModalProps) {
       onClick={handleBackdropClick}
       className="fixed inset-0 z-50 flex items-center justify-center bg-bg/80 p-4"
     >
-      <div className="border border-border bg-bg w-full max-w-lg max-h-[80vh] flex flex-col">
+      <div className="border border-border bg-bg w-full max-w-[calc(100vw-2rem)] sm:max-w-lg max-h-[90vh] sm:max-h-[80vh] flex flex-col">
         <div className="flex items-center justify-between border-b border-border px-4 py-3">
           <span className="text-sm font-bold">
             {type === "image" ? "insert image" : "insert video"}

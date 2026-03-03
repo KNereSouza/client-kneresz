@@ -14,13 +14,11 @@ export function CommentList({ comments, onDeleted }: CommentListProps) {
   }
 
   return (
-    <div className="space-y-6 mb-8">
+    <div className="divide-y divide-border mb-8">
       {comments.map((comment) => (
-        <CommentItem
-          key={comment.id}
-          comment={comment}
-          onDeleted={onDeleted}
-        />
+        <div key={comment.id} className="py-5 first:pt-0">
+          <CommentItem comment={comment} onDeleted={onDeleted} />
+        </div>
       ))}
     </div>
   );
