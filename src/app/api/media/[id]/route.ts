@@ -1,11 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { authenticatedFetch } from "@/lib/api";
-import { authenticatedBackendCall } from "@/lib/auth";
+import { authenticatedBackendCall, requireAdmin } from "@/lib/auth";
 
 export async function DELETE(
   _req: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) {
+  if (!(await requireAdmin())) {
+    return NextResponse.json({ detail: "Forbidden" }, { status: 403 });
+  }
   const { id } = await params;
   const res = await authenticatedBackendCall((token) =>
     authenticatedFetch(`/media/${id}`, token, { method: "DELETE" }),

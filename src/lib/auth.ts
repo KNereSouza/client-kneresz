@@ -1,6 +1,6 @@
 import { cookies } from "next/headers";
-import { backendFetch } from "@/lib/api";
-import type { TokenResponse } from "@/lib/types";
+import { authenticatedFetch, backendFetch } from "@/lib/api";
+import type { TokenResponse, UserOut } from "@/lib/types";
 
 const COOKIE_OPTIONS = {
   httpOnly: true,
@@ -84,4 +84,31 @@ export async function authenticatedBackendCall(
   }
 
   return res;
+}
+
+/**
+ * Returns the authenticated user (from backend /auth/me) or null.
+ * Always re-fetches; never trusts client-cached state.
+ */
+export async function getCurrentUser(): Promise<UserOut | null> {
+  const res = await authenticatedBackendCall((token) =>
+    authenticatedFetch("/auth/me", token),
+  );
+  if (!res || !res.ok) return null;
+  return (await res.json()) as UserOut;
+}
+
+export function isAdmin(user: UserOut | null): boolean {
+  const adminId = process.env.ADMIN_GITHUB_ID;
+  if (!adminId || !user) return false;
+  return user.github_id === Number(adminId);
+}
+
+/**
+ * Returns the user if they are admin, otherwise null.
+ * Use in Server Components and API routes to gate admin-only access.
+ */
+export async function requireAdmin(): Promise<UserOut | null> {
+  const user = await getCurrentUser();
+  return isAdmin(user) ? user : null;
 }

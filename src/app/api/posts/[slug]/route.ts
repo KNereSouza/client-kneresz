@@ -1,13 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
 import { backendFetch, authenticatedFetch } from "@/lib/api";
-import { authenticatedBackendCall } from "@/lib/auth";
+import { authenticatedBackendCall, getValidToken, requireAdmin } from "@/lib/auth";
 
 export async function GET(
   _req: NextRequest,
   { params }: { params: Promise<{ slug: string }> },
 ) {
   const { slug } = await params;
-  const res = await backendFetch(`/posts/${slug}`);
+  const token = await getValidToken();
+  const res = token
+    ? await authenticatedFetch(`/posts/${slug}`, token)
+    : await backendFetch(`/posts/${slug}`);
 
   if (res.status === 301) {
     const location = res.headers.get("location");
@@ -25,6 +28,9 @@ export async function PUT(
   req: NextRequest,
   { params }: { params: Promise<{ slug: string }> },
 ) {
+  if (!(await requireAdmin())) {
+    return NextResponse.json({ detail: "Forbidden" }, { status: 403 });
+  }
   const { slug } = await params;
   const body = await req.json();
   const res = await authenticatedBackendCall((token) =>
@@ -46,6 +52,9 @@ export async function DELETE(
   _req: NextRequest,
   { params }: { params: Promise<{ slug: string }> },
 ) {
+  if (!(await requireAdmin())) {
+    return NextResponse.json({ detail: "Forbidden" }, { status: 403 });
+  }
   const { slug } = await params;
   const res = await authenticatedBackendCall((token) =>
     authenticatedFetch(`/posts/${slug}`, token, { method: "DELETE" }),

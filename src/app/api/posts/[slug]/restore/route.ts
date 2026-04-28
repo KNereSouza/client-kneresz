@@ -1,11 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { authenticatedFetch } from "@/lib/api";
-import { authenticatedBackendCall } from "@/lib/auth";
+import { authenticatedBackendCall, requireAdmin } from "@/lib/auth";
 
 export async function POST(
   _req: NextRequest,
   { params }: { params: Promise<{ slug: string }> },
 ) {
+  if (!(await requireAdmin())) {
+    return NextResponse.json({ detail: "Forbidden" }, { status: 403 });
+  }
   const { slug } = await params;
   const res = await authenticatedBackendCall((token) =>
     authenticatedFetch(`/posts/${slug}/restore`, token, { method: "POST" }),

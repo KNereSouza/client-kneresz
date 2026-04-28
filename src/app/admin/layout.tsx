@@ -1,30 +1,15 @@
-"use client";
+import { notFound } from "next/navigation";
 
-import { useAuth } from "@/components/auth-provider";
 import { AdminNav } from "@/components/admin-nav";
+import { requireAdmin } from "@/lib/auth";
 
-export default function AdminLayout({
+export default async function AdminLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const { isAdmin, isLoading } = useAuth();
-
-  if (isLoading) {
-    return (
-      <div className="min-h-dvh flex items-center justify-center">
-        <p className="text-muted text-xs">&gt; _</p>
-      </div>
-    );
-  }
-
-  if (!isAdmin) {
-    return (
-      <div className="min-h-dvh flex items-center justify-center">
-        <p className="text-muted text-sm">access denied</p>
-      </div>
-    );
-  }
+  const admin = await requireAdmin();
+  if (!admin) notFound();
 
   return (
     <div className="min-h-dvh px-6 sm:px-8 py-8">
