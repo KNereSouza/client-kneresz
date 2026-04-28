@@ -1,15 +1,18 @@
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 
 import { AdminNav } from "@/components/admin-nav";
-import { requireAdmin } from "@/lib/auth";
+import { getAccessToken, getCurrentUser, isAdmin } from "@/lib/auth";
 
 export default async function AdminLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const admin = await requireAdmin();
-  if (!admin) notFound();
+  const hasToken = await getAccessToken();
+  if (!hasToken) redirect("/api/auth/login?redirect=/admin");
+
+  const user = await getCurrentUser();
+  if (!isAdmin(user)) notFound();
 
   return (
     <div className="min-h-dvh px-6 sm:px-8 py-8">
