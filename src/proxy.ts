@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-export function middleware(req: NextRequest) {
+export function proxy(req: NextRequest) {
   const hasAccess = req.cookies.get("access_token")?.value;
   const hasRefresh = req.cookies.get("refresh_token")?.value;
   if (!hasAccess && !hasRefresh) {
